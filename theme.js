@@ -1,0 +1,30 @@
+const THEME = {
+  "appTitle": "簿記3級 仕訳演習ドリル",
+  "appLogo": "📘",
+  "submitBtnText": "仕訳を判定する",
+  "storagePrefix": "boki_template",
+  "fontUrl": "",
+  "fontTitle": "-apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif",
+  "fontMain": "-apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif",
+  "cardWatermark": "PRACTICE DRILL // STAGE-01",
+  "watermarkColor": "#94a3b8",
+  "risingSymbols": ["✨", "⭕", "🎉", "🌟"],
+  "colors": {
+    "--primary": "#2563eb",
+    "--primary-hover": "#1d4ed8",
+    "--bg-body": "#0f172a",
+    "--bg-gradient": "radial-gradient(circle at 50% 10%, #1e293b 0%, #0f172a 100%)",
+    "--container-bg": "#ffffff",
+    "--card-bg": "#f8fafc",
+    "--card-text": "#0f172a",
+    "--card-shadow": "inset 0 0 15px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.08)",
+    "--container-glow": "0 12px 35px rgba(0, 0, 0, 0.45)",
+    "--border": "#cbd5e1",
+    "--debit-border": "#3b82f6",
+    "--credit-border": "#ef4444",
+    "--correct-bg": "#dcfce7",
+    "--correct-text": "#166534",
+    "--wrong-bg": "#fee2e2",
+    "--wrong-text": "#991b1b"
+  }
+};

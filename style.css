@@ -1,0 +1,407 @@
+* { box-sizing: border-box; }
+
+:root {
+  /* 基本配色（初期値：クラシックモダン） */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  
+  /* 階層型背景システム */
+  --bg-body: #0f172a;                                                    /* 画面外側の闇・背景 */
+  --bg-gradient: radial-gradient(circle at 50% 10%, #1e293b 0%, #0f172a 100%);
+  --container-bg: #ffffff;                                              /* 帳簿・手帳本体の背景色 */
+  --container-glow: 0 12px 35px rgba(0, 0, 0, 0.45);                    /* 外枠の重厚な影・発光 */
+  --border: #cbd5e1;                                                    /* 枠線 */
+
+  /* カード・入力エリア専用（視認性の要） */
+  --card-bg: #f8fafc;                                                   /* カード自体の背景 */
+  --card-text: #0f172a;                                                 /* カード・入力欄・見出しの確実な文字色 */
+  --card-shadow: inset 0 0 15px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.08);
+  --card-watermark: "ACCOUNTING DRILL // STAGE-01";
+  --watermark-color: #94a3b8;
+
+  /* 簿記用アクセント */
+  --debit-border: #3b82f6;
+  --credit-border: #ef4444;
+  --correct-bg: #dcfce7;
+  --correct-text: #166534;
+  --wrong-bg: #fee2e2;
+  --wrong-text: #991b1b;
+
+  /* フォント変数 */
+  --font-main: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-title: var(--font-main);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-main) !important;
+  background-color: var(--bg-body);
+  background-image: var(--bg-gradient);
+  color: var(--card-text);
+  padding: 16px;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* 帳簿本体（コンテナ） */
+.container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--container-bg) !important;
+  color: var(--card-text) !important;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--container-glow);
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.logo-icon { font-size: 2rem; line-height: 1; }
+.logo-title {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--primary);
+  font-weight: 900;
+  font-family: var(--font-title, var(--font-main)) !important;
+  letter-spacing: 1px;
+}
+
+.status-badge {
+  background: var(--primary);
+  color: #ffffff !important;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: bold;
+}
+.status-badge.review { background: #b45309; }
+
+/* 5段階ステージタブ */
+.stage-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+@media (max-width: 480px) {
+  .stage-tabs { grid-template-columns: repeat(3, 1fr); }
+}
+
+.stage-btn {
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 0.72rem;
+  font-weight: bold;
+  color: var(--card-text) !important;
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.25;
+  font-family: var(--font-main) !important;
+  transition: all 0.15s ease;
+}
+
+.stage-btn.active {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+/* 進捗バー */
+.quest-progress {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--card-text) !important;
+}
+
+.progress-track {
+  height: 8px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+/* 羊皮紙・古文書調カード */
+.card,
+.question-card {
+  background: var(--card-bg) !important;
+  color: var(--card-text) !important;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--card-shadow) !important;
+  position: relative;
+}
+
+.card::before,
+.question-card::before {
+  content: var(--card-watermark);
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  font-family: monospace;
+  color: var(--watermark-color);
+  font-weight: bold;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.question-label {
+  display: inline-block;
+  background: var(--primary);
+  color: #ffffff !important;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-family: var(--font-title, var(--font-main)) !important;
+}
+
+.story-text { 
+  margin: 0; 
+  font-size: 0.96rem; 
+  line-height: 1.8;
+  font-weight: 700;
+  color: var(--card-text) !important;
+  font-family: var(--font-main) !important;
+}
+
+/* 借方・貸方スプリットコンテナ */
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media(max-width: 560px) { .split-container { grid-template-columns: 1fr; } }
+
+.side-column {
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1.5px solid var(--debit-border);
+  border-radius: 10px;
+  color: var(--card-text) !important;
+}
+.side-column.credit { border-color: var(--credit-border); }
+
+.side-title { 
+  text-align: center; 
+  margin-bottom: 8px; 
+  font-weight: 900; 
+  font-size: 0.85rem; 
+  color: var(--card-text) !important;
+  font-family: var(--font-main) !important;
+}
+
+.entry-row { display: flex; gap: 6px; margin-bottom: 8px; }
+
+.entry-row input {
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--card-text) !important;
+  font-weight: 700;
+  width: 100%;
+  font-family: var(--font-main) !important;
+}
+.entry-row input[type="text"] { flex: 1.3; }
+.entry-row input[type="number"] { flex: 1; }
+.entry-row input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 5px var(--primary); }
+
+.btn-remove {
+  background: var(--wrong-bg);
+  border: 1px solid var(--credit-border);
+  border-radius: 6px;
+  color: var(--wrong-text) !important;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-add {
+  width: 100%;
+  padding: 7px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--card-text) !important;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: var(--font-main) !important;
+  transition: all 0.15s ease;
+}
+.btn-add:hover {
+  border-color: var(--primary);
+  color: var(--primary) !important;
+}
+
+/* 判定ボタン */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  font-family: var(--font-title, var(--font-main)) !important;
+  cursor: pointer;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: background 0.15s ease;
+}
+.btn-submit:hover { background: var(--primary-hover); }
+
+.result-box {
+  display: none;
+  margin-top: 14px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  font-family: var(--font-main) !important;
+}
+.result-box.correct { 
+  background: var(--correct-bg); 
+  border: 1px solid var(--primary); 
+  color: var(--correct-text) !important; 
+}
+.result-box.wrong { 
+  background: var(--wrong-bg); 
+  border: 1px solid var(--credit-border); 
+  color: var(--wrong-text) !important; 
+}
+
+.nav-buttons { display: flex; gap: 10px; margin-top: 14px; }
+.nav-btn {
+  flex: 1;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--card-text) !important;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: var(--font-main) !important;
+  cursor: pointer;
+}
+.nav-btn:hover { background: rgba(0, 0, 0, 0.15); }
+
+.clear-card { display: none; text-align: center; padding: 26px 16px; color: var(--card-text) !important; }
+.btn-review, .btn-restart {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 8px;
+  font-family: var(--font-main) !important;
+}
+.btn-review { background: var(--primary); color: #ffffff !important; }
+.btn-restart { background: #475569; color: #ffffff !important; }
+
+/* 3つの拡張窓エリア */
+details {
+  margin-top: 20px;
+  border-top: 1px dashed var(--border);
+  padding-top: 14px;
+  color: var(--card-text) !important;
+}
+summary { cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+
+textarea {
+  width: 100%;
+  height: 90px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1a140e !important;
+}
+
+.load-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  background: var(--primary);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: var(--font-main) !important;
+  cursor: pointer;
+}
+
+.reset-link {
+  display: block;
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--card-text) !important;
+  opacity: 0.7;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.shake-animation {
+  animation: dmgShake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes dmgShake {
+  10%, 90% { transform: translate3d(-3px, 0, 0); }
+  20%, 80% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-7px, 0, 0); }
+  40%, 60% { transform: translate3d(7px, 0, 0); }
+}
+
+.rising-item {
+  position: fixed;
+  bottom: -30px;
+  z-index: 9999;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  animation: riseMagic ease-out forwards;
+}
+@keyframes riseMagic {
+  0% { transform: translateY(0) scale(0.4) rotate(0deg); opacity: 0; }
+  15% { opacity: 0.95; }
+  50% { transform: translateY(-50vh) translateX(var(--drift, 20px)) scale(1.1) rotate(180deg); opacity: 0.9; }
+  85% { opacity: 0.7; }
+  100% { transform: translateY(-110vh) translateX(calc(var(--drift, 20px) * -1)) scale(1.3) rotate(360deg); opacity: 0; }
+}
